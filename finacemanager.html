@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Manager - Expense Tracker</title>
+    <style>
+        /* General Page Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            text-align: center;
+        }
+
+        /* Header */
+        header {
+            background-color: #00ff2a;
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Container */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            margin: 20px auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+        }
+
+        /* Button */
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #a40404;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #f51515;
+        }
+
+        /* Expense List */
+        .expense-list {
+            margin-top: 20px;
+            padding: 15px;
+            background: #d1ecf1;
+            color: #000000;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .expense-item span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        💰 Finance Manager - Track Your Expenses
+    </header>
+
+    <section class="container">
+        <h2>Enter Your Salary</h2>
+        <label for="salary">💵 Monthly Salary:</label>
+        <input type="number" id="salary" placeholder="Enter your salary" required>
+        <button onclick="setSalary()">Save Salary</button>
+
+        <h3>Total Salary: $<span id="totalSalary">0</span></h3>
+        <h3>Total Expenses: $<span id="totalExpenses">0</span></h3>
+        <h3>Remaining Balance: $<span id="remainingBalance">0</span></h3>
+    </section>
+
+    <section class="container">
+        <h2>Add an Expense</h2>
+        <label for="expenseName">Expense Name:</label>
+        <input type="text" id="expenseName" placeholder="e.g. Grocery, Travel, Rent" required>
+
+        <label for="expenseAmount">Amount ($):</label>
+        <input type="number" id="expenseAmount" placeholder="Enter amount" required>
+
+        <label for="category">Category:</label>
+        <select id="category">
+            <option value="Grocery">Grocery</option>
+            <option value="Travel">Travel</option>
+            <option value="Rent">Rent</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <button onclick="addExpense()">Add Expense</button>
+    </section>
+
+    <section class="container">
+        <h2>Expense List</h2>
+        <div class="expense-list" id="expenseList">
+            <p>No expenses added yet.</p>
+        </div>
+    </section>
+
+    <script>
+        let salary = 0;
+        let totalExpenses = 0;
+        let expenses = [];
+
+        function setSalary() {
+            salary = parseFloat(document.getElementById("salary").value) || 0;
+            document.getElementById("totalSalary").innerText = salary;
+            updateBalance();
+        }
+
+        function addExpense() {
+            let name = document.getElementById("expenseName").value;
+            let amount = parseFloat(document.getElementById("expenseAmount").value) || 0;
+            let category = document.getElementById("category").value;
+
+            if (name && amount > 0) {
+                expenses.push({ name, amount, category });
+
+                totalExpenses += amount;
+                updateExpenseList();
+                updateBalance();
+
+                // Clear input fields
+                document.getElementById("expenseName").value = "";
+                document.getElementById("expenseAmount").value = "";
+            } else {
+                alert("Please enter valid expense details.");
+            }
+        }
+
+        function updateExpenseList() {
+            let expenseListDiv = document.getElementById("expenseList");
+            expenseListDiv.innerHTML = "";
+
+            expenses.forEach((expense, index) => {
+                let div = document.createElement("div");
+                div.classList.add("expense-item");
+                div.innerHTML = `
+                    <span>${expense.name} (${expense.category})</span>
+                    <span>$${expense.amount}</span>
+                `;
+                expenseListDiv.appendChild(div);
+            });
+
+            document.getElementById("totalExpenses").innerText = totalExpenses;
+        }
+
+        function updateBalance() {
+            let balance = salary - totalExpenses;
+            document.getElementById("remainingBalance").innerText = balance;
+        }
+    </script>
+
+</body>
+</html>
